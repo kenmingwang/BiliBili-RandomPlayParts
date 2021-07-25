@@ -12,6 +12,7 @@
 // @grant        GM_addStyle
 // @grant        GM_getResourceText
 // @run-at       document-idle
+// @updateURL    https://raw.githubusercontent.com/kenmingwang/BiliBili-RandomPlayParts/main/RandomPlayVList.js
 // ==/UserScript==
 var newCSS = GM_getResourceText("switchCSS");
 GM_addStyle(newCSS);
