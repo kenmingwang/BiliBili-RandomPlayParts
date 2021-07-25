@@ -2,9 +2,9 @@
 // @name         RandomPlayVList
 // @namespace    http://tampermonkey.net/
 // @version      0.2
-// @description  try to take over the world!
-// @author       You
-// @match        https://www.bilibili.com/video/*?p=*
+// @description  Random play parts within a video with multiple lists.
+// @author       Ken Wang
+// @match        https://www.bilibili.com/video/*
 // @require      https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js
 // @require      https://raw.githubusercontent.com/weatherstar/switch/master/dist/switch.js
 // @resource     switchCSS https://raw.githubusercontent.com/weatherstar/switch/master/dist/switch.css
@@ -42,32 +42,25 @@ function log(str) {
 function init() {
   // string in format of (xxx/yyy) where xxx is current part and yyy is total part
   total_parts = $("span.cur-page").text().replace(/\(|\)/g, '').split("/");
+  if(total_parts.length < 2){
+    log("Not a list video. No need to init random play.");
+    return;
+  }
 
   current_part = parseInt(total_parts[0]);
   total_parts = parseInt(total_parts[1]);
+  if(total_parts < 5){
+    log("No enough parts. No need to init random play.");
+    return;
+  }
   replay_limit = Math.floor(total_parts * 0.1);
 
   played_part.push(current_part);
+
   log("afterAjax Started.");
   initAfterAjax();
-}
 
-// Wait for ajax data for detailed parts
-function initAfterAjax() {
-  setTimeout(function () {
-    parts_ref = $("a.router-link-active");
-    if (parts_ref.length > 0) {
-      log("Parts loaded: " + parts_ref.length);
-      log("Current part: " + current_part);
-      log("Replay limit: " + replay_limit); 
-
-      switcherShow();
-
-    } else {
-      initAfterAjax();
-    }
-  }, 250);
-
+  // Event bindings
   $("video").off("ended");
   $("video").on("ended", onVideoEnded);
 
@@ -81,6 +74,23 @@ function initAfterAjax() {
     }
   });
   log("afterAjax Ended.");
+}
+
+// Wait for ajax data for detailed parts
+function initAfterAjax() {
+  setTimeout(function () {
+    parts_ref = $("ul.list-box li a");
+    if (parts_ref.length > 0) {
+      log("Parts loaded: " + parts_ref.length);
+      log("Current part: " + current_part);
+      log("Replay limit: " + replay_limit); 
+
+      switcherShow();
+
+    } else {
+      initAfterAjax();
+    }
+  }, 250);
 }
 
 function onVideoEnded() {
@@ -128,26 +138,26 @@ function switcherShow() {
 }
 
 function switchOnChange() {
-  // log(toggle_switch.getChecked());
+  log(toggle_switch.getChecked());
 
-  // // Disable default auto-play before switch on
-  // if (!toggle_switch.getChecked()) {
-  //   if ($(".switch-button.on").length != 0) {
-  //     alert("请先关闭自动连播.\n随机选项开了以后会自动禁用自动连播，关闭选项即可恢复。");
-  //     toggle_switch.toggle(); // Hacking code to revert the upcoming switch-on
-  //     return;
-  //   }
-  //   postCheckAutoPlay();
-  // }
+  // Disable default auto-play before switch on
+  if (!toggle_switch.getChecked()) {
+    if ($(".switch-button.on").length != 0) {
+      alert("请先关闭自动连播.\n随机选项开了以后会自动禁用自动连播，关闭选项即可恢复。");
+      toggle_switch.toggle(); // Hacking code to revert the upcoming switch-on
+      return;
+    }
+    postCheckAutoPlay();
+  }
 
-  // postCheckAutoPlay();
+  postCheckAutoPlay();
 }
 
 function postCheckAutoPlay() {
-  // if (!toggle_switch.getChecked())
-  //   $(".next-button").css({ "pointer-events": "none" });
-  // else
-  //   $(".next-button").css({ "pointer-events": "" });
+  if (!toggle_switch.getChecked())
+    $(".next-button").css({ "pointer-events": "none" });
+  else
+    $(".next-button").css({ "pointer-events": "" });
 }
 
 (function () {
