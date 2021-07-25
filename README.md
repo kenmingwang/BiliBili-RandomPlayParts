@@ -8,5 +8,6 @@ Random play parts within a video with multiple lists
 - 开启“随”开关后会禁用功能，关闭开关即可恢复。
 - 如有任何问题，建议刷新。
 - 与这个视频搭配更有风味：(https://www.bilibili.com/video/BV1nh411h7dF)
+- GreasyFork安装：https://greasyfork.org/zh-CN/scripts/429862-randomplayvlist
 
 ![alt text](https://raw.githubusercontent.com/kenmingwang/BiliBili-RandomPlayParts/main/example.png)
