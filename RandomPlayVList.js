@@ -6,8 +6,8 @@
 // @author       Ken Wang
 // @match        https://www.bilibili.com/video/*
 // @require      https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js
-// @require      https://raw.githubusercontent.com/weatherstar/switch/master/dist/switch.js
-// @resource     switchCSS https://raw.githubusercontent.com/weatherstar/switch/master/dist/switch.css
+// @require      https://cdn.jsdelivr.net/npm/weatherstar-switch@1.0.7/dist/switch.min.js
+// @resource     switchCSS https://cdn.jsdelivr.net/npm/weatherstar-switch@1.0.7/dist/switch.css
 // @icon         https://www.google.com/s2/favicons?domain=bilibili.com
 // @grant        GM_addStyle
 // @grant        GM_getResourceText
