@@ -1,5 +1,5 @@
 # BiliBili-RandomPlayParts
-Random play parts within a video with multiple lists
+Random play parts within a bilibili video that has > 5 parts.
 
 # B站多P视频随机播放
 - 适用于分p > 5以上的视频，只需点击“随”开关即可。

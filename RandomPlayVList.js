@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         RandomPlayVList
+// @name         BiliBili-RandomPlayParts
 // @namespace    http://tampermonkey.net/
-// @version      0.2
-// @description  Random play parts within a video with multiple lists.
+// @version      0.3
+// @description  Random play parts within a bilibili video that has > 5 parts.
 // @author       Ken Wang
 // @match        https://www.bilibili.com/video/*
 // @require      https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js
@@ -36,7 +36,7 @@ var toggle_switch;
 
 // Helper logger
 function log(str) {
-  console.log("[RandomPlayVList]: " + str);
+  console.log("[Random2PlayVList]: " + str);
 }
 
 
@@ -60,21 +60,32 @@ function init() {
 
   log("afterAjax Started.");
   initAfterAjax();
-
+  initNextBtn();
   // Event bindings
   $("video").off("ended");
   $("video").on("ended", onVideoEnded);
 
-  //ref: https://github.com/Attect/Bilibili-HTML5-Random-Play
-  $(".bilibili-player-video-btn-next").off("click");
-  $(".bilibili-player-video-btn-next").on("click", function () {
-    if (randomStatus) {
-      playNextRandomPart();
-    } else {
-      window.player.next();
-    }
-  });
   log("afterAjax Ended.");
+}
+
+function initNextBtn() {
+  setTimeout(function () {
+    if($(".bilibili-player-video-btn-next button").length != 0 ){
+      $(".bilibili-player-video-btn-next button").off("click");
+      $(".bilibili-player-video-btn-next button").click(function () {
+        if (toggle_switch.getChecked()) {
+          log("Next random triggered.");
+          playNextRandomPart();
+        } 
+        // after in next part, video gets refreshed and we have to init btn again.
+        initNextBtn();
+      });
+    }
+    else{
+      initNextBtn();
+    }
+  }, 250);
+
 }
 
 // Wait for ajax data for detailed parts
