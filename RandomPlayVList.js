@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BiliBili-RandomPlayParts
 // @namespace    http://tampermonkey.net/
-// @version      0.3
+// @version      0.4
 // @description  Random play parts within a bilibili video that has > 5 parts.
 // @author       Ken Wang
 // @match        https://www.bilibili.com/video/*
