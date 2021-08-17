@@ -62,10 +62,23 @@ function init() {
   initAfterAjax();
   initNextBtn();
   // Event bindings
-  $("video").off("ended");
-  $("video").on("ended", onVideoEnded);
+  videoEventBinding();
 
   log("afterAjax Ended.");
+}
+
+function videoEventBinding() {
+  setTimeout(function() {
+    if($._data(document.getElementsByTagName('video')[0], "events" ) == undefined ){
+      $("video").off("ended");
+      $("video").on("ended", onVideoEnded);
+      log("event binded");
+    }
+    else{
+      log("event not binded");
+      videoEventBinding();
+    }
+  },250);
 }
 
 function initNextBtn() {
