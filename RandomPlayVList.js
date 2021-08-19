@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BiliBili-RandomPlayParts
 // @namespace    http://tampermonkey.net/
-// @version      0.4
+// @version      0.5
 // @description  Random play parts within a bilibili video that has > 5 parts.
 // @author       Ken Wang
 // @match        https://www.bilibili.com/video/*
@@ -22,11 +22,9 @@ var total_parts = 0;
 
 var current_part = 0;
 
-// Make sure not to replay the last 0.1*total_parts videos.
-var played_part = [];
+var random_list = [];
 
-// Inits to 0.1*total_parts
-var replay_limit;
+var start_p = 0;
 
 // Stores all part ref, can mock click it to route.
 var parts_ref;
@@ -48,15 +46,15 @@ function init() {
     return;
   }
 
-  current_part = parseInt(total_parts[0]);
   total_parts = parseInt(total_parts[1]);
-  if(total_parts < 5){
-    log("No enough parts. No need to init random play.");
+
+
+  if(total_parts < 3){
+    log("Num of video less than 3. No need to init random play.");
     return;
   }
-  replay_limit = Math.floor(total_parts * 0.1);
 
-  played_part.push(current_part);
+  createRandomList();
 
   log("afterAjax Started.");
   initAfterAjax();
@@ -69,13 +67,17 @@ function init() {
 
 function videoEventBinding() {
   setTimeout(function() {
-    if($._data(document.getElementsByTagName('video')[0], "events" ) == undefined ){
-      $("video").off("ended");
-      $("video").on("ended", onVideoEnded);
-      log("event binded");
-    }
-    else{
-      log("event not binded");
+    try {
+      if($._data(document.getElementsByTagName('video')[0], "events" ) == undefined ){
+        $("video").off("ended");
+        $("video").on("ended", onVideoEnded);
+        log("event binded");
+      } else {
+        log("event not binded");
+        videoEventBinding();
+      }
+    } catch(err) {
+      log(err);
       videoEventBinding();
     }
   },250);
@@ -107,8 +109,6 @@ function initAfterAjax() {
     parts_ref = $("ul.list-box li a");
     if (parts_ref.length > 0) {
       log("Parts loaded: " + parts_ref.length);
-      log("Current part: " + current_part);
-      log("Replay limit: " + replay_limit); 
 
       switcherShow();
 
@@ -130,15 +130,31 @@ function Random(min, max) {
 
 // Generates random part number and play accordingly.
 function playNextRandomPart() {
-  var p_random = Random(1, total_parts);
-  while (played_part.includes(p_random)) {
-    p_random = Random(1, total_parts);
-  }
-  played_part.push(p_random);
-  if (played_part.length >= 10)
-    played_part.shift();
+  current_part = parseInt($("span.cur-page").text().replace(/\(|\)/g, '').split("/")[0]) - 1;
 
-  playPart(p_random);
+  let random_p = random_list.indexOf(current_part);
+
+  random_p++;
+
+  if (random_p == total_parts) {
+    createRandomList();
+    random_p = 1;
+  }
+  playPart(random_list[random_p]);
+}
+
+// get random play list
+function createRandomList() {
+  random_list = [];
+  let arr_1_to_total = Array.from({length: total_parts}, (x,i) => i);
+  for (var i = 0; i < total_parts; i++){
+    let temp = parseInt(Math.random()*(total_parts-i));
+    random_list.push(arr_1_to_total[temp]);
+    arr_1_to_total.splice(temp,1);
+  }
+  // move current_part to the start of random_list
+  random_list.splice(random_list.indexOf(current_part));
+  random_list.unshift(current_part);
 }
 
 function playPart(part) {
