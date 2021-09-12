@@ -60,7 +60,8 @@ function init() {
   initAfterAjax();
   initNextBtn();
   // Event bindings
-  if(document.getElementsByTagName('video')[0] != undefined)
+  if(document.getElementsByTagName('video')[0] != undefined && 
+     document.getElementsByTagName('video')[0].src != '')
     videoEventBinding('video');
   else
     videoEventBinding('bwp-video');
@@ -97,15 +98,14 @@ function initNextBtn() {
           log("Next random triggered.");
           playNextRandomPart();
         } 
-        // after in next part, video gets refreshed and we have to init btn again.
-        initNextBtn();
-      });
+      })
+      log("NextBtn Inited");
     }
     else{
+      log("NextBtn Initing");
       initNextBtn();
     }
-  }, 250);
-
+  }, 20);
 }
 
 // Wait for ajax data for detailed parts
@@ -146,6 +146,9 @@ function playNextRandomPart() {
     random_p = 1;
   }
   playPart(random_list[random_p]);
+
+  //  // after in next part, video gets refreshed and we have to init btn again.
+  initNextBtn();
 }
 
 // get random play list
