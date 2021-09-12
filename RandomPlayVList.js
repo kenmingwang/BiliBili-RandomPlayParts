@@ -68,11 +68,17 @@ function init() {
 function videoEventBinding() {
   setTimeout(function() {
     try {
-      if($._data(document.getElementsByTagName('bwp-video')[0], "events" ) == undefined ){
+      if($._data(document.getElementsByTagName('video')[0], "events" ) == undefined ){
+        $("video").off("ended");
+        $("video").on("ended", onVideoEnded);
+        log("event binded");
+      } 
+      else if($._data(document.getElementsByTagName('bwp-video')[0], "events" ) == undefined){
         $("bwp-video").off("ended");
         $("bwp-video").on("ended", onVideoEnded);
         log("event binded");
-      } else {
+      }
+      else {
         log("event not binded");
         videoEventBinding();
       }
