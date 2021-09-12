@@ -1,8 +1,8 @@
 # BiliBili-RandomPlayParts
-Random play parts within a bilibili video that parts > 2.
+Random play parts within a bilibili video that has parts > 3.
 
 # B站多P视频随机播放
-- 适用于分p > 2以上的视频，只需点击“随”开关即可。
+- 适用于分p > 3以上的视频，只需点击“随”开关即可。
 - 有优化后的去重随机播放逻辑
 - 需要关闭b站自带的”自动连播“功能才可以开启“随”开关。
 - 开启“随”开关后会禁用“自动连播”功能，关闭开关即可恢复。
