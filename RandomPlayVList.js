@@ -60,24 +60,23 @@ function init() {
   initAfterAjax();
   initNextBtn();
   // Event bindings
-  videoEventBinding();
+  if(document.getElementsByTagName('video')[0] != undefined)
+    videoEventBinding('video');
+  else
+    videoEventBinding('bwp-video');
 
   log("afterAjax Ended.");
 }
 
-function videoEventBinding() {
+function videoEventBinding(videoTag) {
+  log("Current video Mode is: " + videoTag);
   setTimeout(function() {
     try {
-      if($._data(document.getElementsByTagName('video')[0], "events" ) == undefined ){
-        $("video").off("ended");
-        $("video").on("ended", onVideoEnded);
+      if($._data(document.getElementsByTagName(videoTag)[0], "events" ) == undefined ){
+        $(videoTag).off("ended");
+        $(videoTag).on("ended", onVideoEnded);
         log("event binded");
       } 
-      else if($._data(document.getElementsByTagName('bwp-video')[0], "events" ) == undefined){
-        $("bwp-video").off("ended");
-        $("bwp-video").on("ended", onVideoEnded);
-        log("event binded");
-      }
       else {
         log("event not binded");
         videoEventBinding();
