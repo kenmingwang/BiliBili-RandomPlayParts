@@ -60,11 +60,7 @@ function init() {
   initAfterAjax();
   initNextBtn();
   // Event bindings
-  if(document.getElementsByTagName('video')[0] != undefined && 
-     document.getElementsByTagName('video')[0].src != '')
-    videoEventBinding('video');
-  else
-    videoEventBinding('bwp-video');
+  videoEventBinding('video');
 
   log("afterAjax Ended.");
 }
